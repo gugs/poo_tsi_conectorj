@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class DatabaseMySQL implements IConnectionDB{
 
 	final String HOST_NAME = "localhost";
-	final String PORT_NUMBER = "3306";
+	final String PORT_NUMBER = "3307";
 	final String USER_NAME = "root";
 	final String PASSWORD = "root";
 	final String DATABASE = "database";

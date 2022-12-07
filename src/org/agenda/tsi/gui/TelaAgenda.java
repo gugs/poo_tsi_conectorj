@@ -15,6 +15,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.agenda.exception.EmailNotFilledException;
+import org.agenda.tsi.model.Agenda;
+import org.agenda.tsi.persistencia.AgendaDAO;
+
 public class TelaAgenda extends JFrame{
 
 	private JMenuBar barraMenu;
@@ -106,12 +110,27 @@ public class TelaAgenda extends JFrame{
 				BorderLayout.SOUTH);
 	}
 	
+	public void apagarCampos() {
+		txfNome.setText("");
+		txfEmail.setText("");
+		txfTelefone.setText("");
+	}
+	
 	private class SalvarAction implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			JOptionPane.showMessageDialog(null, "Apertei!");
+			
+			try {
+				AgendaDAO.getInstance().adicionarItem(new Agenda(0, txfNome.getText(), txfEmail.getText(), txfTelefone.getText()));
+				JOptionPane.showMessageDialog(null, "item inserido com sucesso");
+				apagarCampos();
+				
+			} catch (EmailNotFilledException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null, e1.getMessage());
+			}
 		}
 		
 	}

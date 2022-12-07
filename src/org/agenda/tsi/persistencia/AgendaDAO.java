@@ -3,6 +3,7 @@ package org.agenda.tsi.persistencia;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.agenda.exception.EmailNotFilledException;
 import org.agenda.tsi.model.Agenda;
 
 public class AgendaDAO implements IPersistencia{
@@ -22,21 +23,27 @@ public class AgendaDAO implements IPersistencia{
 	}
 	
 	@Override
-	public void adicionarItem(Agenda a) {
+	public void adicionarItem(Agenda a) throws EmailNotFilledException{
 	
-		try {
-			PreparedStatement pstm = databaseMySQL.
-					getConnection().prepareStatement("INSERT INTO AGENDA VALUES (?, ?, ?, ?);");
-			pstm.setInt(1, a.getId());
-			pstm.setString(2, a.getNome());
-			pstm.setString(3, a.getEmail());
-			pstm.setString(4, a.getTelefone());
-			pstm.execute();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		System.out.println(a.getEmail());
+		if(a.getEmail() == null || a.getEmail().equalsIgnoreCase("") || a.getEmail().equalsIgnoreCase("\n")) {
+			throw new EmailNotFilledException("O campo de email é obrigatório!");
+		}else {
+			try {
+				PreparedStatement pstm = databaseMySQL.
+						getConnection().prepareStatement("INSERT INTO AGENDA VALUES (?, ?, ?, ?);");
+				pstm.setInt(1, a.getId());
+				pstm.setString(2, a.getNome());
+				pstm.setString(3, a.getEmail());
+				pstm.setString(4, a.getTelefone());
+				pstm.execute();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-	}
+		}
+		
 
 	@Override
 	public Agenda localizarItem(String email) {
